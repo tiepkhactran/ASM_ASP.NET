@@ -1,0 +1,36 @@
+﻿@using ASM_ASP.Models
+
+@{
+    ViewBag.Title = "GetParameter";
+    var cart = ViewBag.shoppingCart as ShoppingCart;
+    var cartInfo = new CartInformation();
+}
+
+
+<h2>Shopping Cart</h2>
+
+<ul>
+    @foreach (var item in cart.GetCartItems())
+    {
+<li>
+    @item.Value.ProductName
+    - @item.Value.Quantity
+    - @item.Value.Price
+    <br />
+    <a onclick="return confirm('Ban co chac muon xoa san pham tuyet voi cua chung toi ra khoi gio hang khong.')" href="/ShoppingCart/RemoveCart?productId=@item.Value.ProductId">Remove</a>
+</li>
+}
+</ul>
+<b>Total price: @cart.GetTotalPrice()</b>
+@using (Html.BeginForm("CreateOrder", "ShoppingCart", FormMethod.Post))
+{
+<div>
+    Họ tên người nhận: @Html.EditorFor(m => cartInfo.ShipName)
+    Điện thoại người nhận: @Html.EditorFor(m => cartInfo.ShipPhone)
+    Địa chỉ người nhận: @Html.EditorFor(m => cartInfo.ShipAddress)
+    <br />
+    Loại thanh toán: @Html.DropDownListFor(m => cartInfo.PaymentTypeId, EnumHelper.GetSelectList(typeof(Order.PaymentType)))
+</div>
+<input type="submit" value="Submit" />
+}
+
